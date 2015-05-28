@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCLoader", "SCLoader\SCLoader.csproj", "{A96CF9C0-163D-4A92-A9F9-CF3306DB87D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCLoaderShared", "SCLoaderShared\SCLoaderShared.csproj", "{8188A951-BFD3-400C-A90C-E1B9F415D31D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCLoaderStorage.Local", "SCLoaderStorage.Local\SCLoaderStorage.Local.csproj", "{53DC78F3-1BDD-4DDB-8B52-862C545BCFA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A96CF9C0-163D-4A92-A9F9-CF3306DB87D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A96CF9C0-163D-4A92-A9F9-CF3306DB87D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A96CF9C0-163D-4A92-A9F9-CF3306DB87D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A96CF9C0-163D-4A92-A9F9-CF3306DB87D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8188A951-BFD3-400C-A90C-E1B9F415D31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8188A951-BFD3-400C-A90C-E1B9F415D31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8188A951-BFD3-400C-A90C-E1B9F415D31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8188A951-BFD3-400C-A90C-E1B9F415D31D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53DC78F3-1BDD-4DDB-8B52-862C545BCFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53DC78F3-1BDD-4DDB-8B52-862C545BCFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53DC78F3-1BDD-4DDB-8B52-862C545BCFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53DC78F3-1BDD-4DDB-8B52-862C545BCFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
