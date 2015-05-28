@@ -1,5 +1,5 @@
-﻿using SCLoaderShared;
-using SCLoaderShared.Interfaces;
+﻿using SCLoaderShared.DataClasses;
+using SCLoaderShared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,20 +9,19 @@ using System.Threading.Tasks;
 
 namespace SCLoaderStorage.Local.Logic
 {
-    class FileHelper
+    class FileStorage
     {
 
         private string targetFolder = "";
 
-        internal FileHelper(string targetFolder)
+        internal FileStorage(string targetFolder)
         {
 
             this.targetFolder = targetFolder;
 
         }
 
-
-        internal void SaveMp3(FileStream mp3File, ITrack trackInfo)
+        internal void SaveMp3(FileStream mp3File, Track trackInfo)
         {
 
             var fileName = PathHelpers.GetWorkingCombinedPath(this.targetFolder, trackInfo.Mp3FileName);
@@ -34,7 +33,7 @@ namespace SCLoaderStorage.Local.Logic
 
         }
 
-        internal void SaveCover(FileStream jpegFile, ITrack trackInfo)
+        internal void SaveCover(FileStream jpegFile, Track trackInfo)
         {
 
             var fileName = PathHelpers.GetWorkingCombinedPath(this.targetFolder, trackInfo.CoverFileName);

@@ -9,9 +9,11 @@ namespace SCLoaderShared.Interfaces
     public interface ILogger
     {
 
+        string LoggerName { get; }
+
         void LogVerbose(string message, params object[] args);
 
-        //void VerboseInline(string message, params object[] args);
+        void LogInformation(string message, params object[] args);
 
         void LogException(string message, Exception exception, params object[] args);
 

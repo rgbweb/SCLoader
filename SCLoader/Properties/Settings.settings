@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SCLoader.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SoundCloudUserName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SoundCloudUserPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SoundCloudClientID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SoundCloudClientSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DownloadableTracksOnly" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PreferOriginalMp3" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CheckIntervalMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="InstanceLockLifetimeMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="CustomTempFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="StorageProviderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">LocalStorageProvider</Value>
+    </Setting>
+    <Setting Name="LoggerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ConsoleLogger</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

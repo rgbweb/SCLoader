@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCLoaderShared.DataClasses;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,14 +11,16 @@ namespace SCLoaderShared.Interfaces
     public interface IStorageProvider
     {
 
-        bool TryApplyInstanceLock();
+        string StorageProviderName { get; }
+
+        bool TryApplyInstanceLock(TimeSpan lifetime);
         void ReleaseInstanceLock();
 
-        IStorageTrackList GetTrackList();
-        void UpdateTrackList(IStorageTrackList trackList);
+        StorageTrackList GetTrackList();
+        void UpdateTrackList(StorageTrackList trackList);
 
-        void SaveMp3(FileStream mp3File, ITrack trackInfo);
-        void SaveCover(FileStream jpegFile, ITrack trackInfo);
+        void SaveMp3(FileStream mp3File, Track trackInfo);
+        void SaveCover(FileStream jpegFile, Track trackInfo);
 
     }
 }

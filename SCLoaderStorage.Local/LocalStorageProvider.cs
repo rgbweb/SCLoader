@@ -1,7 +1,10 @@
-﻿using SCLoaderShared.Interfaces;
+﻿using SCLoaderShared.DataClasses;
+using SCLoaderShared.Interfaces;
 using SCLoaderStorage.Local.Logic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,57 +12,73 @@ using System.Threading.Tasks;
 
 namespace SCLoaderStorage.Local
 {
+
+    [Export(typeof(IStorageProvider))]
     public class LocalStorageProvider : IStorageProvider
     {
 
-        private InstanceLockHelper instanceLockHelper;
-        private TrackListHelper trackListHelper;
-        private FileHelper fileHelper;
+        private const string ConfigurationSection = "storageSettings/LocalStorageProvider";
+
+        private InstanceLock instanceLockStorage;
+        private TrackListStorage trackListStorage;
+        private FileStorage fileStorage;
 
 
-        public LocalStorageProvider(dynamic config)
+        public LocalStorageProvider()
         {
 
-            var instanceLockLifetime = config.InstaneLockLifetime;
-            var mp3TargetFolder = config.Mp3TargetFolder;
+            // Load custom configuration from host App.config
+            var config = (Configuration)ConfigurationManager.GetSection(ConfigurationSection);
+            if (config == null)
+            {
+                throw new ConfigurationErrorsException("Failed to load configuration section [" + ConfigurationSection + "] from host App.config file.");
+            }
 
-            this.instanceLockHelper = new InstanceLockHelper(instanceLockLifetime);
-            this.trackListHelper = new TrackListHelper();
-            this.fileHelper = new FileHelper(mp3TargetFolder);
+            this.instanceLockStorage = new InstanceLock(config.InstanceLockFilePath);
+            this.trackListStorage = new TrackListStorage(config.TrackListFilePath);
+            this.fileStorage = new FileStorage(config.Mp3TargetPath);
 
         }
 
 
         #region Interface implementation
 
-        public bool TryApplyInstanceLock()
+        string IStorageProvider.StorageProviderName
         {
-            return this.instanceLockHelper.TryApplyInstanceLock();
+            get
+            {
+                return "LocalStorageProvider";
+            }
         }
 
-        public void ReleaseInstanceLock()
+        bool IStorageProvider.TryApplyInstanceLock(TimeSpan lifetime)
         {
-            this.instanceLockHelper.ReleaseInstanceLock();
+            return this.instanceLockStorage.TryApplyLock(lifetime);
         }
 
-        public IStorageTrackList GetTrackList()
+        void IStorageProvider.ReleaseInstanceLock()
         {
-            return this.trackListHelper.GetTrackList();
+            this.instanceLockStorage.ReleaseLock();
         }
 
-        public void UpdateTrackList(IStorageTrackList trackList)
+        StorageTrackList IStorageProvider.GetTrackList()
         {
-            this.trackListHelper.UpdateTrackList(trackList);
+            return this.trackListStorage.GetTrackList();
         }
 
-        public void SaveMp3(FileStream mp3File, ITrack trackInfo)
+        void IStorageProvider.UpdateTrackList(StorageTrackList trackList)
         {
-            this.fileHelper.SaveMp3(mp3File, trackInfo);
+            this.trackListStorage.UpdateTrackList(trackList);
         }
 
-        public void SaveCover(FileStream jpegFile, ITrack trackInfo)
+        void IStorageProvider.SaveMp3(FileStream mp3File, Track trackInfo)
         {
-            this.fileHelper.SaveCover(jpegFile, trackInfo);
+            this.fileStorage.SaveMp3(mp3File, trackInfo);
+        }
+
+        void IStorageProvider.SaveCover(FileStream jpegFile, Track trackInfo)
+        {
+            this.fileStorage.SaveCover(jpegFile, trackInfo);
         }
 
         #endregion

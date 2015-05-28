@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCLoaderShared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,21 +10,25 @@ using System.Timers;
 
 namespace SCLoaderStorage.Local.Logic
 {
-    class InstanceLockHelper
+    class InstanceLock
     {
 
-        private TimeSpan lockLifetime = new TimeSpan();
+        private string lockFile;
+        private TimeSpan lockLifetime;
         private Timer lockRefreshTimer = null;
 
-
-        internal InstanceLockHelper(TimeSpan lifetime)
+        internal InstanceLock(string targetFolder)
         {
-            this.lockLifetime = lifetime;
+
+            this.lockFile = PathHelpers.GetWorkingCombinedPath(targetFolder, "SCLoaderInstanceLock.txt");
+
         }
 
 
-        internal bool TryApplyInstanceLock()
+        internal bool TryApplyLock(TimeSpan lifetime)
         {
+
+            this.lockLifetime = lifetime;
 
             var lockApplied = ApplyOrRefreshLock();
 
@@ -37,30 +42,19 @@ namespace SCLoaderStorage.Local.Logic
         }
 
 
-        internal void ReleaseInstanceLock()
+        internal void ReleaseLock()
         {
-
-            var lockFile = GetLockFilePath();
 
             if (this.lockRefreshTimer != null)
             {
-                this.lockRefreshTimer.Enabled = false;
+                this.lockRefreshTimer.Stop();
                 this.lockRefreshTimer = null;
             }
 
-            if (File.Exists(lockFile))
+            if (File.Exists(this.lockFile))
             {
-                File.Delete(lockFile);
+                File.Delete(this.lockFile);
             }
-
-        }
-
-
-        private static string GetLockFilePath()
-        {
-
-            var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(exePath, "SCLoaderInstanceLock.txt");
 
         }
 
@@ -68,11 +62,9 @@ namespace SCLoaderStorage.Local.Logic
         private bool ApplyOrRefreshLock()
         {
 
-            var lockFile = GetLockFilePath();
-
-            if (File.Exists(lockFile))
+            if (File.Exists(this.lockFile))
             {
-                var lockFileContent = File.ReadAllText(lockFile, Encoding.ASCII);
+                var lockFileContent = File.ReadAllText(this.lockFile, Encoding.ASCII);
 
                 DateTime lockTimeout;
                 if (DateTime.TryParse(lockFileContent, out lockTimeout))
@@ -85,7 +77,7 @@ namespace SCLoaderStorage.Local.Logic
             }
 
             var newLockTimeout = DateTime.UtcNow.Add(this.lockLifetime);
-            File.WriteAllText(lockFile, newLockTimeout.ToString("s"), Encoding.ASCII);
+            File.WriteAllText(this.lockFile, newLockTimeout.ToString("s"), Encoding.ASCII);
 
             return true;
 
@@ -99,16 +91,18 @@ namespace SCLoaderStorage.Local.Logic
             // Half of the actual lifetime should be enough
             this.lockRefreshTimer.Interval = this.lockLifetime.TotalMilliseconds / 2;
 
+            // Restart the timer from within the elapsed event
+            this.lockRefreshTimer.AutoReset = false;
+
             this.lockRefreshTimer.Elapsed += (sender, e) =>
             {
-                this.lockRefreshTimer.Enabled = false;
 
                 ApplyOrRefreshLock();
 
-                this.lockRefreshTimer.Enabled = true;
+                this.lockRefreshTimer.Start();
             };
 
-            this.lockRefreshTimer.Enabled = true;
+            this.lockRefreshTimer.Start();
         }
 
 
