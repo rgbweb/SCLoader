@@ -72,11 +72,14 @@ namespace SCLoader
 
             if (!this.lockApplyTask.IsCompleted)
             {
+                // Lock was not applied yet
                 this.CancellationTokenSource.Cancel();
                 this.lockApplyTask.Wait(1000);
             }
-
-            this.StorageProvider.ReleaseInstanceLock();
+            else
+            {
+                this.StorageProvider.ReleaseInstanceLock();
+            }
 
         }
 
