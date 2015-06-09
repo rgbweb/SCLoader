@@ -1,6 +1,6 @@
 # SCLoader - Automated SoundCloud Download Tool
 
-This is a Console application to periodically scan the personal SoundCloud "likes".
+Console application to periodically scan the personal SoundCloud "likes".
 Downloads new tracks as mp3 and adds the cover image and ID3 tags automatically.
 
 ## Required Settings
