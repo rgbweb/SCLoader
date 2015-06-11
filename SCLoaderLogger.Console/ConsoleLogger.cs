@@ -21,6 +21,11 @@ namespace SCLoaderLogger.Console
             }
         }
 
+        void ILogger.Initialize()
+        {
+            // Nothing to initialize here
+        }
+
         void ILogger.LogVerbose(string message, params object[] args)
         {
 
