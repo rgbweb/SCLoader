@@ -194,8 +194,8 @@ namespace SCLoader
                 track.Year = DateTime.Today.Year;
             }
 
-            track.CoverFileName = track.Artist + " " + track.Title + ".jpg";
-            track.Mp3FileName = track.Artist + " " + track.Title + ".mp3";
+            track.CoverFileName = PathHelpers.CleanIllegalFilenameCharacters(track.Artist + " " + track.Title + ".jpg");
+            track.Mp3FileName = PathHelpers.CleanIllegalFilenameCharacters(track.Artist + " " + track.Title + ".mp3");
 
             return track;
 
