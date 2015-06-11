@@ -24,7 +24,16 @@ namespace SCLoaderStorage.Local
         private FileStorage fileStorage;
 
 
-        public LocalStorageProvider()
+        string IStorageProvider.StorageProviderName
+        {
+            get
+            {
+                return "LocalStorageProvider";
+            }
+        }
+
+
+        void IStorageProvider.Initialize()
         {
 
             // Load custom configuration from host App.config
@@ -41,16 +50,6 @@ namespace SCLoaderStorage.Local
         }
 
 
-        #region Interface implementation
-
-        string IStorageProvider.StorageProviderName
-        {
-            get
-            {
-                return "LocalStorageProvider";
-            }
-        }
-
         bool IStorageProvider.TryApplyInstanceLock(TimeSpan lifetime)
         {
             return this.instanceLockStorage.TryApplyLock(lifetime);
@@ -60,6 +59,7 @@ namespace SCLoaderStorage.Local
         {
             this.instanceLockStorage.ReleaseLock();
         }
+
 
         StorageTrackList IStorageProvider.GetTrackList()
         {
@@ -71,6 +71,7 @@ namespace SCLoaderStorage.Local
             this.trackListStorage.UpdateTrackList(trackList);
         }
 
+
         void IStorageProvider.SaveMp3(FileStream mp3File, Track trackInfo)
         {
             this.fileStorage.SaveMp3(mp3File, trackInfo);
@@ -80,8 +81,6 @@ namespace SCLoaderStorage.Local
         {
             this.fileStorage.SaveCover(jpegFile, trackInfo);
         }
-
-        #endregion
 
     }
 }
