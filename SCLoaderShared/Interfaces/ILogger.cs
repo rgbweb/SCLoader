@@ -11,6 +11,8 @@ namespace SCLoaderShared.Interfaces
 
         string LoggerName { get; }
 
+        void Initialize();
+
         void LogVerbose(string message, params object[] args);
 
         void LogInformation(string message, params object[] args);
