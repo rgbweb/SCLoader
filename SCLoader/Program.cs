@@ -21,10 +21,14 @@ namespace SCLoader
 
             var settings = new Settings();
 
-            // Initialize providers
+            // Load and initialize providers
             var providerManager = new ProviderManager();
+
             ILogger logger = providerManager.GetLogger(settings.LoggerName);
+            logger.Initialize();
+
             IStorageProvider storageProvider = providerManager.GetStorageProvider(settings.StorageProviderName);
+            storageProvider.Initialize();
 
             // Initialize business logic objects
             SCLoader scLoader = new SCLoader(settings, logger, storageProvider);
