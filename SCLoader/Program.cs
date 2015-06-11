@@ -21,14 +21,16 @@ namespace SCLoader
 
             var settings = new Settings();
 
-            // Load and initialize providers
+            // Load providers using MEF
             var providerManager = new ProviderManager();
 
             ILogger logger = providerManager.GetLogger(settings.LoggerName);
             logger.Initialize();
+            logger.LogVerbose ("Logger [{0}] initialized.", logger.LoggerName);
 
             IStorageProvider storageProvider = providerManager.GetStorageProvider(settings.StorageProviderName);
             storageProvider.Initialize();
+            logger.LogVerbose("StorageProvider [{0}] initialized.", storageProvider.StorageProviderName);
 
             // Initialize business logic objects
             SCLoader scLoader = new SCLoader(settings, logger, storageProvider);

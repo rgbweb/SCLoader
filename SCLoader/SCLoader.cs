@@ -48,7 +48,6 @@ namespace SCLoader
             }
 
             var scTracks = scClient.GetAllFavorites();
-
             logger.LogVerbose("{0} tracks found in the SoundCloud favorites.", scTracks.Count);
 
             var newTracks = FilterNewTracks(scTracks, trackList.Tracks);
