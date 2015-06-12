@@ -21,12 +21,12 @@ The plug-ins are cerated by implementing interfaces from SCLoaderShared project 
 
 ### Current storage provider (Interface IStorageProvider)
 
-* LocalStorage (Save downloaded tracks on local computer)
-* MegaStorage (Save downloaded tracks at [mega.co.nz](http://mega.co.nz) (account required)
+* LocalStorage - Save downloaded tracks on local computer
+* MegaStorage - Save downloaded tracks at [mega.co.nz](http://mega.co.nz) (account required)
 
 ### Current logging provider (Interface ILogger)
 
-* ConsoleLogger (Writes the output to the console window)
+* ConsoleLogger - Writes the output to the console window
 
 # License
 
