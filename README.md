@@ -5,7 +5,7 @@ Downloads new tracks as mp3 and adds the cover image and ID3 tags automatically.
 
 ## Required Settings
 
-The application requires a SoundCloud Account and a registered App under [http://soundcloud.com/you/apps](http://soundcloud.com/you/apps)
+The application requires a SoundCloud Account and a registered App at [http://soundcloud.com/you/apps](http://soundcloud.com/you/apps)
 
 * SoundCloud User Name (Display Name)
 * SoundCloud Password
@@ -21,7 +21,8 @@ The plug-ins are cerated by implementing interfaces from SCLoaderShared project 
 
 ### Current storage provider (Interface IStorageProvider)
 
-* LocalStorage (Simple file storage on local computer)
+* LocalStorage (Save downloaded tracks on local computer)
+* MegaStorage (Save downloaded tracks at [http://mega.co.nz](mega.co.nz) (account required)
 
 ### Current logging provider (Interface ILogger)
 
