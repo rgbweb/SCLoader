@@ -51,13 +51,24 @@ namespace SCLoader
                 }
                 catch (AggregateException ex)
                 {
-                    // Do not throw when task was canceled by CancellationToken
-                    if (ex.InnerExceptions.Count != 1 || !(ex.InnerException is TaskCanceledException))
+                    // Mark the exception thrown by an CancellationToken as handled
+                    ex.Handle((innerEx) =>
                     {
-                        throw;
-                    }
+                        return innerEx is TaskCanceledException;
+                    });
                 }
             }, this, this.CancellationTokenSource.Token);
+
+            // Check if the Task crashed with an exception
+            this.lockApplyTask.ContinueWith((task) =>
+            {
+                if (task.Exception != null)
+                {
+                    // The state object is an instance of the current class
+                    var instance = (InstanceLock)task.AsyncState;
+                    instance.Logger.LogException("Failed to apply InstanceLock. See exception for details.", task.Exception);
+                }
+            });
 
             this.lockApplyTask.Start();
 

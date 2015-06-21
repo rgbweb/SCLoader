@@ -12,7 +12,7 @@ The application requires a SoundCloud Account and a registered App at [http://so
 * SoundCloud App ID
 * SoundCloud App Client Secret
 
-There are also some optional settings for the main application and custom configuration sections for included plug-ins available.
+There are also some optional settings for the main application and serialized configurations for the included plug-ins available.
 
 ## Extending functionality
 

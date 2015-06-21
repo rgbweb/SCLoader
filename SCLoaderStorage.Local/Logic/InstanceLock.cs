@@ -17,10 +17,13 @@ namespace SCLoaderStorage.Local.Logic
         private TimeSpan lockLifetime;
         private Timer lockRefreshTimer = null;
 
+        private string lockId;
+
         internal InstanceLock(string targetFolder)
         {
 
             this.lockFile = PathHelpers.GetWorkingCombinedPath(targetFolder, "SCLoaderInstanceLock.txt");
+            this.lockId = Guid.NewGuid().ToString("N");
 
         }
 
@@ -66,18 +69,24 @@ namespace SCLoaderStorage.Local.Logic
             {
                 var lockFileContent = File.ReadAllText(this.lockFile, Encoding.ASCII);
 
+                var lockFileId = lockFileContent.Split('|').FirstOrDefault();
+                var lockFileTime = lockFileContent.Split('|').LastOrDefault();
+
                 DateTime lockTimeout;
-                if (DateTime.TryParse(lockFileContent, out lockTimeout))
+                if (DateTime.TryParse(lockFileTime, out lockTimeout))
                 {
-                    if (lockTimeout > DateTime.UtcNow)
+                    // Check if a lock from another instance is still active
+                    if (lockTimeout > DateTime.UtcNow && !lockFileId.Equals(this.lockId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return false;
                     }
                 }
             }
 
+            // Add or update the LockFile
             var newLockTimeout = DateTime.UtcNow.Add(this.lockLifetime);
-            File.WriteAllText(this.lockFile, newLockTimeout.ToString("s"), Encoding.ASCII);
+            var newLockFileContent = this.lockId + "|" + newLockTimeout.ToString("s");
+            File.WriteAllText(this.lockFile, newLockFileContent, Encoding.ASCII);
 
             return true;
 

@@ -45,7 +45,7 @@ namespace SCLoaderStorage.Mega.Logic
         {
 
             var json = JsonConvert.SerializeObject(trackList, Formatting.Indented);
-            this.megaClient.SaveFileContent(this.directoryNode, TrackListStorage.fileName, json);
+            this.megaClient.SaveFileContent(this.directoryNode, TrackListStorage.fileName, json, true);
 
         }
 

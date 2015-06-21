@@ -1,10 +1,10 @@
-﻿using SCLoaderShared.DataClasses;
+﻿using Newtonsoft.Json;
+using SCLoaderShared.DataClasses;
 using SCLoaderShared.Interfaces;
 using SCLoaderStorage.Local.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,8 +16,6 @@ namespace SCLoaderStorage.Local
     [Export(typeof(IStorageProvider))]
     public class LocalStorageProvider : IStorageProvider
     {
-
-        private const string ConfigurationSection = "storageSettings/LocalStorageProvider";
 
         private InstanceLock instanceLockStorage;
         private TrackListStorage trackListStorage;
@@ -33,14 +31,18 @@ namespace SCLoaderStorage.Local
         }
 
 
-        void IStorageProvider.Initialize()
+        void IStorageProvider.Initialize(string serializedConfig)
         {
 
-            // Load custom configuration from host App.config
-            var config = (Configuration)ConfigurationManager.GetSection(ConfigurationSection);
-            if (config == null)
+            // Parse the configuration
+            Configuration config;
+            try
             {
-                throw new ConfigurationErrorsException("Failed to load configuration section [" + ConfigurationSection + "] from host App.config file.");
+                config = JsonConvert.DeserializeObject<Configuration>(serializedConfig);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to parse the configuration", ex);
             }
 
             this.instanceLockStorage = new InstanceLock(config.InstanceLockFilePath);

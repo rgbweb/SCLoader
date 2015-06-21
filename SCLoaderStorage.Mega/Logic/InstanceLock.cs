@@ -22,12 +22,16 @@ namespace SCLoaderStorage.Mega.Logic
 
         private MegaClient megaClient;
 
+        private string lockId;
 
         internal InstanceLock(string targetPath, MegaClient megaClient)
         {
 
             this.megaClient = megaClient;
             this.directoryNode = megaClient.GetOrAddDirectoryNode(targetPath);
+
+            // Unique lock id
+            this.lockId = Guid.NewGuid().ToString("N");
 
         }
 
@@ -58,7 +62,7 @@ namespace SCLoaderStorage.Mega.Logic
                 this.lockRefreshTimer = null;
             }
 
-            megaClient.DeleteFile(this.directoryNode, InstanceLock.fileName);
+            megaClient.DeleteFile(this.directoryNode, InstanceLock.fileName, false);
 
         }
 
@@ -66,24 +70,29 @@ namespace SCLoaderStorage.Mega.Logic
         private bool ApplyOrRefreshLock()
         {
 
-            // Returns an empty string file does not exist
+            // Returns an empty string if the file does not exist
             var lockFileContent = this.megaClient.GetFileContent(this.directoryNode, InstanceLock.fileName);
             if (lockFileContent.Length > 0)
             {
 
+                var lockFileId = lockFileContent.Split('|').FirstOrDefault();
+                var lockFileTime = lockFileContent.Split('|').LastOrDefault();
+
                 DateTime lockTimeout;
-                if (DateTime.TryParse(lockFileContent, out lockTimeout))
+                if (DateTime.TryParse(lockFileTime, out lockTimeout))
                 {
-                    if (lockTimeout > DateTime.UtcNow)
+                    // Check if a lock from another instance is still active
+                    if (lockTimeout > DateTime.UtcNow && !lockFileId.Equals(this.lockId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return false;
                     }
                 }
-
             }
 
+            // Add or update the LockFile
             var newLockTimeout = DateTime.UtcNow.Add(this.lockLifetime);
-            this.megaClient.SaveFileContent(this.directoryNode, InstanceLock.fileName, newLockTimeout.ToString("s"));
+            var newLockFileContent = this.lockId + "|" + newLockTimeout.ToString("s");
+            this.megaClient.SaveFileContent(this.directoryNode, InstanceLock.fileName, newLockFileContent, true);
 
             return true;
 

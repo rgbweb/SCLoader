@@ -13,7 +13,7 @@ namespace SCLoaderShared.Interfaces
 
         string StorageProviderName { get; }
 
-        void Initialize();
+        void Initialize(string serializedConfig);
 
         bool TryApplyInstanceLock(TimeSpan lifetime);
         void ReleaseInstanceLock();

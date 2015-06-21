@@ -21,7 +21,7 @@ namespace SCLoaderLogger.Console
             }
         }
 
-        void ILogger.Initialize()
+        void ILogger.Initialize(string serializedConfig)
         {
             // Nothing to initialize here
         }

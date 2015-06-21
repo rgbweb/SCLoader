@@ -17,38 +17,62 @@ namespace SCLoader
         static void Main(string[] args)
         {
 
-            // Note: The App.config file is overwritten by the post-build event if an "MyDebugApp.config" file exists in the project folder
+            ILogger logger = null;
 
-            var settings = new Settings();
-
-            // Load providers using MEF
-            var providerManager = new ProviderManager();
-
-            ILogger logger = providerManager.GetLogger(settings.LoggerName);
-            logger.Initialize();
-            logger.LogVerbose("Logger [{0}] initialized.", logger.LoggerName);
-
-            IStorageProvider storageProvider = providerManager.GetStorageProvider(settings.StorageProviderName);
-            storageProvider.Initialize();
-            logger.LogVerbose("StorageProvider [{0}] initialized.", storageProvider.StorageProviderName);
-
-            // Initialize business logic objects
-            SCLoader scLoader = new SCLoader(settings, logger, storageProvider);
-            SCLoaderTimer scLoaderTimer = new SCLoaderTimer(TimeSpan.FromMinutes(settings.CheckIntervalMinutes), scLoader, logger);
-            InstanceLock instanceLock = new InstanceLock(TimeSpan.FromMinutes(settings.InstanceLockLifetimeMinutes), storageProvider, logger);
-
-            // Apply the instance lock and start to work
-            instanceLock.ApplyAsync(() =>
+            try
             {
-                scLoaderTimer.Start();
-            });
 
-            // Run the application until anyone wants to stop it
-            WaitForApplicationCloseCommand();
+                // Note:
+                // The settings file is automatically overwritten if an SCLoader.exe.custom.config file exists in the application directory
+                // Settings can be configured by using the ApplicationSettings or the (older) AppSettings sections in AppConfig
+                // The AppSettings value is used if both have a value with the same name
+                var settings = new SettingsManager();
 
-            scLoaderTimer.Stop();
+                // Load providers using MEF
+                var providerManager = new ProviderManager();
 
-            instanceLock.Release();
+                // Load an initialize the LoggingProvider
+                string loggerName = settings.GetSetting("LoggerName");
+                string loggerSettings = settings.GetSetting(loggerName + "Settings");
+
+                logger = providerManager.GetLogger(loggerName);
+                logger.Initialize(loggerSettings);
+                logger.LogVerbose("Logger [{0}] initialized.", logger.LoggerName);
+
+                // Load an initialize the StorageProvider
+                string storageProviderName = settings.GetSetting("StorageProviderName");
+                string storageProviderSettings = settings.GetSetting(storageProviderName + "Settings");
+
+                IStorageProvider storageProvider = providerManager.GetStorageProvider(storageProviderName);
+                storageProvider.Initialize(storageProviderSettings);
+                logger.LogVerbose("StorageProvider [{0}] initialized.", storageProvider.StorageProviderName);
+
+                // Initialize business logic objects
+                SCLoader scLoader = new SCLoader(settings, logger, storageProvider);
+                SCLoaderTimer scLoaderTimer = new SCLoaderTimer(TimeSpan.FromMinutes(settings.GetSetting("CheckIntervalMinutes")), scLoader, logger);
+                InstanceLock instanceLock = new InstanceLock(TimeSpan.FromMinutes(settings.GetSetting("InstanceLockLifetimeMinutes")), storageProvider, logger);
+
+                // Apply the instance lock and start to work
+                instanceLock.ApplyAsync(() =>
+                {
+                    scLoaderTimer.Start();
+                });
+
+                // Run the application until someone wants to stop it
+                WaitForApplicationCloseCommand();
+
+                scLoaderTimer.Stop();
+
+                instanceLock.Release();
+
+            }
+            catch (Exception ex)
+            {
+                if (logger != null)
+                {
+                    logger.LogException("Unhandled application exception thrown", ex);
+                }
+            }
 
             // ExitCode != 0 will cause an automatic restart in some services like AppHarbor Background Workers
             Environment.ExitCode = 1;

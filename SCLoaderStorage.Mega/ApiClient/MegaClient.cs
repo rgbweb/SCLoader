@@ -106,33 +106,61 @@ namespace SCLoaderStorage.Mega.ApiClient
         }
 
 
-        public void SaveFileStream(INode directoryNode, string fileName, Stream stream)
-        {
-
-            this.apiClient.Upload(stream, fileName, directoryNode);
-
-        }
-
-        public void SaveFileContent(INode directoryNode, string fileName, string content)
+        public void SaveFileContent(INode directoryNode, string fileName, string content, bool overwriteExistingFile)
         {
 
             byte[] byteArray = Encoding.UTF8.GetBytes(content);
             using (var stream = new MemoryStream(byteArray))
             {
-                SaveFileStream(directoryNode, fileName, stream);
+                SaveFileStream(directoryNode, fileName, stream, overwriteExistingFile);
+            }
+
+        }
+
+        public void SaveFileStream(INode directoryNode, string fileName, Stream stream, bool overwriteExistingFile)
+        {
+
+            /*
+             * Note:
+             * Files cannot be overwritten or updated on Mega.
+             * We have to delete the old file after adding a new.
+             */
+
+            // Get the possible existing file node
+            INode lockFileNode = null;
+            if (overwriteExistingFile)
+            {
+                lockFileNode = GetFileNode(directoryNode, fileName);
+            }
+
+            // Add the new file
+            this.apiClient.Upload(stream, fileName, directoryNode);
+
+            // Remove the old file
+            if (lockFileNode != null)
+            {
+                DeleteFile(lockFileNode, false);
             }
 
         }
 
 
-        public void DeleteFile(INode directoryNode, string fileName)
+        public void DeleteFile(INode directoryNode, string fileName, bool moveToTrash)
         {
 
             var fileNode = GetFileNode(directoryNode, fileName);
             if (fileNode != null)
             {
-                this.apiClient.Delete(fileNode);
+                DeleteFile(fileNode, moveToTrash);
             }
+
+        }
+
+
+        private void DeleteFile(INode fileNode, bool moveToTrash)
+        {
+
+            this.apiClient.Delete(fileNode, moveToTrash);
 
         }
 
@@ -143,6 +171,7 @@ namespace SCLoaderStorage.Mega.ApiClient
             var childNodes = this.apiClient.GetNodes(directoryNode);
             return childNodes
                 .Where(n => n.Type == NodeType.File && n.Name.Equals(fileName, StringComparison.InvariantCultureIgnoreCase))
+                .OrderByDescending(n => n.LastModificationDate)
                 .FirstOrDefault();
 
         }

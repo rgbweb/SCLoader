@@ -30,14 +30,14 @@ namespace SCLoaderStorage.Mega.Logic
         internal void SaveMp3(FileStream mp3File, Track trackInfo)
         {
 
-            this.megaClient.SaveFileStream(this.directoryNode, trackInfo.Mp3FileName, mp3File);
+            this.megaClient.SaveFileStream(this.directoryNode, trackInfo.Mp3FileName, mp3File, true);
 
         }
 
         internal void SaveCover(FileStream jpegFile, Track trackInfo)
         {
 
-            this.megaClient.SaveFileStream(this.directoryNode, trackInfo.CoverFileName, jpegFile);
+            this.megaClient.SaveFileStream(this.directoryNode, trackInfo.CoverFileName, jpegFile, true);
 
         }
 

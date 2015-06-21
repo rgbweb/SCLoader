@@ -23,81 +23,63 @@ namespace SCLoader.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SoundCloudUserName {
             get {
                 return ((string)(this["SoundCloudUserName"]));
             }
-            set {
-                this["SoundCloudUserName"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SoundCloudUserPassword {
             get {
                 return ((string)(this["SoundCloudUserPassword"]));
             }
-            set {
-                this["SoundCloudUserPassword"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SoundCloudClientID {
             get {
                 return ((string)(this["SoundCloudClientID"]));
             }
-            set {
-                this["SoundCloudClientID"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SoundCloudClientSecret {
             get {
                 return ((string)(this["SoundCloudClientSecret"]));
             }
-            set {
-                this["SoundCloudClientSecret"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DownloadableTracksOnly {
             get {
                 return ((bool)(this["DownloadableTracksOnly"]));
-            }
-            set {
-                this["DownloadableTracksOnly"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PreferOriginalMp3 {
-            get {
-                return ((bool)(this["PreferOriginalMp3"]));
-            }
-            set {
-                this["PreferOriginalMp3"] = value;
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PreferOriginalMp3 {
+            get {
+                return ((bool)(this["PreferOriginalMp3"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("120")]
         public int CheckIntervalMinutes {
             get {
                 return ((int)(this["CheckIntervalMinutes"]));
@@ -106,46 +88,67 @@ namespace SCLoader.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public int InstanceLockLifetimeMinutes {
             get {
                 return ((int)(this["InstanceLockLifetimeMinutes"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string CustomTempFilePath {
             get {
                 return ((string)(this["CustomTempFilePath"]));
             }
-            set {
-                this["CustomTempFilePath"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("LocalStorageProvider")]
         public string StorageProviderName {
             get {
                 return ((string)(this["StorageProviderName"]));
             }
-            set {
-                this["StorageProviderName"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("ConsoleLogger")]
         public string LoggerName {
             get {
                 return ((string)(this["LoggerName"]));
             }
-            set {
-                this["LoggerName"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ConsoleLoggerSettings {
+            get {
+                return ((string)(this["ConsoleLoggerSettings"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{ \"InstanceLockFilePath\": \"\\\\\", \"TrackListFilePath\": \"\\\\\", \"Mp3TargetPath\": \"\\\\\" " +
+            "}")]
+        public string LocalStorageProviderSettings {
+            get {
+                return ((string)(this["LocalStorageProviderSettings"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{ \"Email\": \"\", \"Password\": \"\", \"InstanceLockFilePath\": \"\\\\Apps\\\\SCLoader\\\\\", \"Tra" +
+            "ckListFilePath\": \"\\\\Apps\\\\SCLoader\\\\\", \"Mp3TargetPath\": \"\\\\Music\\\\SoundCloud\\\\\" " +
+            "}")]
+        public string MegaStorageProviderSettings {
+            get {
+                return ((string)(this["MegaStorageProviderSettings"]));
             }
         }
     }

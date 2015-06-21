@@ -17,12 +17,12 @@ namespace SCLoader
     class SCLoader
     {
 
-        private Settings settings;
+        private SettingsManager settings;
         private ILogger logger;
         private IStorageProvider storage;
 
 
-        public SCLoader(Settings settings, ILogger logger, IStorageProvider storage)
+        public SCLoader(SettingsManager settings, ILogger logger, IStorageProvider storage)
         {
 
             this.settings = settings;
@@ -36,10 +36,10 @@ namespace SCLoader
         {
 
             // Initialize the "real" SoundCloud client
-            var scClient = new SoundCloudClient(settings.SoundCloudClientID,
-                settings.SoundCloudClientSecret,
-                settings.SoundCloudUserName,
-                settings.SoundCloudUserPassword);
+            var scClient = new SoundCloudClient(settings.GetSetting("SoundCloudClientID"),
+                settings.GetSetting("SoundCloudClientSecret"),
+                settings.GetSetting("SoundCloudUserName"),
+                settings.GetSetting("SoundCloudUserPassword"));
 
             var trackList = storage.GetTrackList();
             if (trackList == null)
@@ -53,7 +53,7 @@ namespace SCLoader
             var newTracks = FilterNewTracks(scTracks, trackList.Tracks);
             logger.LogVerbose("{0} tracks are new.", newTracks.Count);
 
-            if (settings.DownloadableTracksOnly)
+            if (settings.GetSetting("DownloadableTracksOnly"))
             {
                 newTracks = FilterDownloadableTracks(newTracks);
                 logger.LogVerbose("{0} tracks are downloadable.", newTracks.Count);
@@ -128,11 +128,11 @@ namespace SCLoader
         {
 
             // Start mp3 download
-            var tempMp3Filename = GetTempFilename(settings.CustomTempFilePath);
-            SoundCloudDownloader.DownloadSoundToTemp(tempMp3Filename, scTrack, settings.PreferOriginalMp3, settings.SoundCloudClientID);
+            var tempMp3Filename = GetTempFilename(settings.GetSetting("CustomTempFilePath"));
+            SoundCloudDownloader.DownloadSoundToTemp(tempMp3Filename, scTrack, settings.GetSetting("PreferOriginalMp3"), settings.GetSetting("SoundCloudClientID"));
 
             // Start cover JPEG download (500x500)
-            var tempCoverFilename = GetTempFilename(settings.CustomTempFilePath);
+            var tempCoverFilename = GetTempFilename(settings.GetSetting("CustomTempFilePath"));
             SoundCloudDownloader.DownloadCoverToTemp(tempCoverFilename, scTrack);
 
             // Copy the meta infos for the ID3-Tag

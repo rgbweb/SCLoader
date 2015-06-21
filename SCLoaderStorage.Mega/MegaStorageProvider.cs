@@ -1,11 +1,11 @@
-﻿using SCLoaderShared.DataClasses;
+﻿using Newtonsoft.Json;
+using SCLoaderShared.DataClasses;
 using SCLoaderShared.Interfaces;
 using SCLoaderStorage.Mega.ApiClient;
 using SCLoaderStorage.Mega.Logic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,12 +18,9 @@ namespace SCLoaderStorage.Mega
     public class MegaStorageProvider : IStorageProvider
     {
 
-        private const string ConfigurationSection = "storageSettings/MegaStorageProvider";
-
         private InstanceLock instanceLockStorage;
         private TrackListStorage trackListStorage;
         private FileStorage fileStorage;
-
 
         string IStorageProvider.StorageProviderName
         {
@@ -34,14 +31,18 @@ namespace SCLoaderStorage.Mega
         }
 
 
-        void IStorageProvider.Initialize()
+        void IStorageProvider.Initialize(string serializedConfig)
         {
 
-            // Load custom configuration from host App.config
-            var config = (Configuration)ConfigurationManager.GetSection(ConfigurationSection);
-            if (config == null)
+            // Parse the configuration
+            Configuration config;
+            try
             {
-                throw new ConfigurationErrorsException("Failed to load configuration section [" + ConfigurationSection + "] from host App.config file.");
+                config = JsonConvert.DeserializeObject<Configuration>(serializedConfig);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to parse the configuration", ex);
             }
 
             var megaClient = new MegaClient(config.Email, config.Password);
