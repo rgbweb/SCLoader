@@ -41,14 +41,17 @@ namespace SCLoader
                 tag.Year.Value = track.Year.ToString();
 
                 // Add the local JPEG cover
-                using (var jpgStream = File.Open(jpgFilePath, FileMode.Open, FileAccess.Read))
+                if (!string.IsNullOrEmpty(jpgFilePath))
                 {
-                    tag.Pictures.Add(new PictureFrame()
+                    using (var jpgStream = File.Open(jpgFilePath, FileMode.Open, FileAccess.Read))
                     {
-                        PictureType = PictureType.FrontCover,
-                        MimeType = "image/jpeg",
-                        PictureData = GetByteArrayFromFileStream(jpgStream)
-                    });
+                        tag.Pictures.Add(new PictureFrame()
+                        {
+                            PictureType = PictureType.FrontCover,
+                            MimeType = "image/jpeg",
+                            PictureData = GetByteArrayFromFileStream(jpgStream)
+                        });
+                    }
                 }
 
                 // Save the new tag

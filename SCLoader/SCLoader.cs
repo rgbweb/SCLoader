@@ -132,8 +132,12 @@ namespace SCLoader
             SoundCloudDownloader.DownloadSoundToTemp(tempMp3Filename, scTrack, settings.GetSetting("PreferOriginalMp3"), settings.GetSetting("SoundCloudClientID"));
 
             // Start cover JPEG download (500x500)
-            var tempCoverFilename = GetTempFilename(settings.GetSetting("CustomTempFilePath"));
-            SoundCloudDownloader.DownloadCoverToTemp(tempCoverFilename, scTrack);
+            var tempCoverFilename = "";
+            if (scTrack.Artwork != null)
+            {
+                tempCoverFilename = GetTempFilename(settings.GetSetting("CustomTempFilePath"));
+                SoundCloudDownloader.DownloadCoverToTemp(tempCoverFilename, scTrack);
+            }
 
             // Copy the meta infos for the ID3-Tag
             Track track = GetTrackInfo(scTrack);
@@ -148,14 +152,20 @@ namespace SCLoader
             }
 
             // Save the cover to the storage
-            using (var fileStream = File.OpenRead(tempCoverFilename))
+            if (!string.IsNullOrEmpty(tempCoverFilename))
             {
-                storage.SaveCover(fileStream, track);
+                using (var fileStream = File.OpenRead(tempCoverFilename))
+                {
+                    storage.SaveCover(fileStream, track);
+                }
             }
 
             // Free up the temp space
             File.Delete(tempMp3Filename);
-            File.Delete(tempCoverFilename);
+            if (!string.IsNullOrEmpty(tempCoverFilename))
+            {
+                File.Delete(tempCoverFilename);
+            }
 
             return track;
 
